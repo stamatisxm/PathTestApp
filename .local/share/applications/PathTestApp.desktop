@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=PathTestApp
+Name[el]=PathTestApp
+GenericName=System Configuration
+GenericName[el]=Διαμόρφωση Συστήματος
+Comment=Test whether your desktop environment includes $HOME/bin in your $PATH
+Comment[el]=Ελέξτε αν το γραφικό σας περιβάλλον συμπεριλαμβάνει τον φάκελο $HOME/bin στη μεταβλητή $PATH
+Type=Application
+TryExec=PathTestApp
+Exec=PathTestApp
+Icon=PathTestApp
+Categories=System;Utility;

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# version 0.0.3 - Fixed Logic Bug
+# version 0.0.2 - Added terminal message
+# version 0.0.1 - Initial Concept
+
+[[ "$LANG" =~ "el_GR" ]] || [[ "$LANGUAGE" =~ "el_GR" ]] \
+&& TEXTNOTIFICATION="\
+Εάν διαβάζεις αυτό το μήνυμα, σημαίνει ότι:
+
+1) - Έχεις ρυθμίσει σωστά το \$PATH σου, να συμπεριλαμβάνει
+     τον φάκελο \$HOME/bin στο κέλυφος σύνδεσής σου, όπως
+     επίσης και στα μη-συνδετικά (τερματικά) κελύφη σου.
+
+2) - Ο Διαχειριστής Παραθύρων / το Γραφικό περιβάλλον σου ($XDG_CURRENT_DESKTOP)
+     λαμβάνει υπ' όψιν του τον φάκελο \$HOME/bin, τον οποίο
+     ήδη συμπεριλαμβάνει το \$PATH του κελύφους σου.
+
+3) - Μπορείς να εκτελέσεις προγράμματα τα οποία βρίσκονται
+     στον \$HOME/bin φάκελό σου, καλώντας τα ονομαστικά,
+     σαν να βρίσκονταν στους \"bin\" φακέλους του συστήματος.
+
+4) - Η τρέχουσα τιμή της μεταβλητής σου \$PATH είναι:
+     $PATH
+
+" || \
+TEXTNOTIFICATION="\
+If you are reading this message, it means that:
+
+1) - You have correctly set your \$PATH to include
+     your \$HOME/bin in your login shell and this
+     of course cascades to non-login shells, too.
+
+2) - Your Window Manager / Desktop Environment ($XDG_CURRENT_DESKTOP)
+     takes into account your \$HOME/bin directory,
+     already included in the \$PATH of your shell.
+
+3) - You can have programs that currently reside in
+     your \$HOME/bin run by the system as if they were
+     residing in the system's \"bin\" directories.
+
+4) - Your \$PATH variable is currently set to:
+     $PATH
+
+"
+TEXTNOTIFICATIONFILE=/tmp/PathTestApp
+
+SYSTEMTERMINAL=`ls -1 /usr/bin/*terminal* | head -1`
+
+{ [[ -x $(which libnotify 2>/dev/null) ]] && { libnotify "Path Setup" "$TEXTNOTIFICATION" || true; }; } && exit || \
+{ [[ -x $(which notify-send 2>/dev/null) ]] && { notify-send "Path Setup" "$TEXTNOTIFICATION" || true; }; } && exit || \
+{ [[ -x $(which zenity 2>/dev/null) ]] && { zenity --no-wrap --info --title "Path Setup" --text="$TEXTNOTIFICATION" || true; }; } && exit || \
+{ [[ -x $(which gxmessage 2>/dev/null) ]] && { gxmessage -title "Path Setup" "$TEXTNOTIFICATION" || true; }; } && exit || \
+{ [[ -x $(which xmessage 2>/dev/null) ]] && { xmessage -title "Path Setup" "$TEXTNOTIFICATION" || true; }; } && exit || \
+{ [[ -x $SYSTEMTERMINAL ]] && echo "Path Setup
+
+$TEXTNOTIFICATION" > $TEXTNOTIFICATIONFILE && $SYSTEMTERMINAL -e "less $TEXTNOTIFICATIONFILE"; rm $TEXTNOTIFICATIONFILE; }
+
